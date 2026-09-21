@@ -36,6 +36,10 @@ def version():
 def version():
     return {"service": "retail-platform", "version": APP_VERSION, "environment": ENVIRONMENT, "db_host": DB_HOST}
 
+@app.get("/orders/count")
+def order_count():
+    return {"orders_today": 0, "version": APP_VERSION}
+
 
 @app.get("/payment/calculate")
 def calculate_payment():
