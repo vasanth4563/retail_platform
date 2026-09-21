@@ -30,15 +30,25 @@ def health():
 
 @app.get("/version")
 def version():
-    return {"version": APP_VERSION, "environment": ENVIRONMENT, "db_host": DB_HOST}
+    return {
+        "service": "retail-platform",
+        "version": APP_VERSION,
+        "environment": ENVIRONMENT,
+        "db_host": DB_HOST,
+    }
 
-@app.get("/version")
-def version():
-    return {"service": "retail-platform", "version": APP_VERSION, "environment": ENVIRONMENT, "db_host": DB_HOST}
 
 @app.get("/orders/count")
 def order_count():
+    # Feature-branch stub (develop): represents in-progress work for the
+    # next release, unrelated to the payment hotfix.
     return {"orders_today": 0, "version": APP_VERSION}
+
+
+@app.get("/orders/latest")
+def latest_order():
+    # Feature-branch stub (develop): second example feature commit.
+    return {"order_id": None, "version": APP_VERSION}
 
 
 @app.get("/payment/calculate")
