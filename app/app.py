@@ -17,6 +17,9 @@ FORCE_HEALTH_FAIL = os.environ.get("FORCE_HEALTH_FAIL", "false").lower() == "tru
 # database host name (never "localhost") once you wire up a DB container.
 DB_HOST = os.environ.get("DB_HOST", "")
 
+REGION = os.environ.get("REGION", "us-east-1")
+
+
 
 @app.get("/health")
 def health():
@@ -35,6 +38,7 @@ def version():
         "version": APP_VERSION,
         "environment": ENVIRONMENT,
         "db_host": DB_HOST,
+        "region": REGION, 
     }
 
 
