@@ -20,7 +20,6 @@ DB_HOST = os.environ.get("DB_HOST", "")
 REGION = os.environ.get("REGION", "us-east-1")
 
 
-
 @app.get("/health")
 def health():
     if FORCE_HEALTH_FAIL:
@@ -38,7 +37,7 @@ def version():
         "version": APP_VERSION,
         "environment": ENVIRONMENT,
         "db_host": DB_HOST,
-        "region": REGION, 
+        "region": REGION,
     }
 
 
@@ -58,33 +57,24 @@ def latest_order():
 @app.get("/payment/calculate")
 def calculate_payment():
     """
-    PAYMENT DEFECT (v4.2.0, current code below):
-    Tax is calculated on the full amount BEFORE the flat discount voucher
-    is subtracted, then the voucher is subtracted from the taxed total.
-    That means the customer effectively pays tax on money they never
-    actually spent (the discounted portion) -- an overcharge. This is the
-    bug Task 1 asks you to fix on the hotfix/payment-4.2.1 branch.
+    PAYMENT DEFECT (v4.2.0, original buggy code):
+    Tax was calculated on the full amount BEFORE the flat discount voucher
+    was subtracted, then the voucher was subtracted from the taxed total.
+    That meant the customer effectively paid tax on money they never
+    actually spent (the discounted portion) -- an overcharge.
 
+    FIXED (v4.2.1, hotfix/payment-4.2.1, merged here):
     Buggy:  total = (amount * (1 + tax_rate)) - discount_amount
     Fixed:  total = (amount - discount_amount) * (1 + tax_rate)
 
-    These are NOT the same number when the discount is a flat amount
-    (they would be identical if it were a percentage -- multiplication
-    order doesn't matter for percentages, which is why this uses a flat
-    voucher amount instead). The difference here is exactly
-    discount_amount * tax_rate = $1.20 per order.
-
-    To apply the hotfix, replace the two lines below with:
-        discounted = amount - discount_amount
-        total = discounted * (1 + tax_rate)
-    then commit with a message like:
-        "fix: apply discount voucher before tax in payment calculation"
+    Resolved via merge conflict from hotfix/payment-4.2.1 into develop:
+    kept the fixed (discount-before-tax) logic.
     """
     amount = 100.0
     tax_rate = 0.08
     discount_amount = 15.0
 
-    taxed = amount * (1 + tax_rate)
-    total = taxed - discount_amount
+    discounted = amount - discount_amount
+    total = discounted * (1 + tax_rate)
 
     return {"amount": amount, "total": round(total, 2), "version": APP_VERSION}
