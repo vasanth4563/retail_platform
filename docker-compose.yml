@@ -1,0 +1,19 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    image: retail-app:4.2.0
+    container_name: retail-app-prod
+    ports:
+      - "8081:8081"
+    environment:
+      APP_VERSION: "4.2.0"
+      ENVIRONMENT: "PRODUCTION"
+      FORCE_HEALTH_FAIL: "false"
+    networks:
+      - retail-network
+
+networks:
+  retail-network:
+    driver: bridge
