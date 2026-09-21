@@ -32,6 +32,10 @@ def health():
 def version():
     return {"version": APP_VERSION, "environment": ENVIRONMENT, "db_host": DB_HOST}
 
+@app.get("/version")
+def version():
+    return {"service": "retail-platform", "version": APP_VERSION, "environment": ENVIRONMENT, "db_host": DB_HOST}
+
 
 @app.get("/payment/calculate")
 def calculate_payment():
