@@ -62,7 +62,7 @@ def calculate_payment():
     tax_rate = 0.08
     discount_amount = 15.0
 
-    taxed = amount * (1 + tax_rate)
-    total = taxed - discount_amount
-
+    discounted = amount - discount_amount
+    total = discounted * (1 + tax_rate)
+    
     return {"amount": amount, "total": round(total, 2), "version": APP_VERSION}
